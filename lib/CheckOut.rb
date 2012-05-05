@@ -30,8 +30,6 @@ class Discounter
 	end
 	
 	def applyDiscounts(basket)
-	  #foreach item in the basket check to see if there is an entry
-	  #
 	  discount =0
 	  basket.keys.each{|key| 
 	  	if @discounts.has_key?(key) 
