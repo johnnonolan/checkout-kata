@@ -1,6 +1,4 @@
 class CheckOut 
-	@rules
-	@total = 0
 	def initialize(rules, discounts)
 		@total=0
 		@basket = Hash.new
