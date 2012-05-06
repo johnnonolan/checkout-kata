@@ -1,0 +1,22 @@
+CHECKOUT
+Responsibility
+To Scan the items in
+To report the price
+
+Collaborators
+Basket
+Discounter
+Rules
+
+BASKET
+Responsibility
+To hold list of items
+Collaborators 
+Discounter
+
+Discounter
+Responsibility
+To store and apply discounts
+Collaborators
+
+

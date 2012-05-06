@@ -1,23 +1,20 @@
+
 class CheckOut 
 	def initialize(rules, discounts)
 		@total=0
-		@basket = Hash.new
 		@rules = rules
-		@discounter = Discounter.new(discounts)
+		@discounter = discounts
+		@basket = Basket.new(@discounter)
 	end
 	
 	def scan sku
 		price = @rules[sku]
-		if @basket.has_key?(sku)
-		   @basket[sku] += 1
-		else 
-		  @basket[sku] = 1
-		end
+		@basket.Add(sku)
  		@total += price
 	end	
 	
 	def total
-		@total - @discounter.applyDiscounts(@basket)
+		@total - @basket.apply_discounts
 	end
 end
 
@@ -27,23 +24,47 @@ class Discounter
 		@discounts = discounts
 	end
 	
-	def applyDiscounts(basket)
-	  discount =0
-	  basket.keys.each{|key| 
-	  	if @discounts.has_key?(key) 
-	  		sku_discounts = @discounts[key]
-	  		no_of_items = basket[key]
-	  		sku_discounts.keys.each {|qty| 
-	  			while no_of_items >= qty 
-	  				discount += sku_discounts[qty]
-	  				no_of_items -= qty
+	def apply_discount(sku,qty)
+		discount = 0
+	  	if @discounts.has_key?(sku) 
+	  		sku_discounts = @discounts[sku]
+	  
+	  		sku_discounts.keys.each {|discounted_qty| 
+	  			while qty >= discounted_qty 
+	  				discount += sku_discounts[discounted_qty]
+	  				qty -= discounted_qty
 	  			end
 	  		}	  		
-	  		if sku_discounts.has_key?(no_of_items) 
-	  			discount += sku_discounts[no_of_items]
+	  		if sku_discounts.has_key?(qty) 
+	  			discount += sku_discounts[qty]
 	  		end
 	  	end
+	  	discount	
+	end
+	
+end
+
+class Basket
+	def initialize(discounts)
+		@discounts = Discounter.new(discounts)
+		@basket = Hash.new
+	end
+	
+	def Add(sku)
+		if @basket.has_key?(sku)
+		   @basket[sku] += 1
+		else 
+		   @basket[sku] = 1
+		end
+	end
+	
+	def apply_discounts
+	  discount =0
+	  puts "hi"
+	  @basket.each_pair{|sku,qty| 
+	  	discount +=  @discounts.apply_discount(sku,qty)
 	  }
 	  discount
 	end
+	
 end
